@@ -3,125 +3,842 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anandshiv Maurya - Portfolio</title>
+    <title>Anandshiv Maurya - Software Engineer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  
-    <link rel="stylesheet" href="style.css">
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: #4A90E2;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+        }
+
+        .nav-links a {
+            color: #666;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #4A90E2;
+        }
+
+        section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 40px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero {
+            flex-direction: column;
+            text-align: center;
+            padding-top: 150px;
+        }
+
+        .hero-label {
+            font-size: 14px;
+            color: #4A90E2;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            opacity: 0;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            opacity: 0;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 650px;
+            color: #666;
+            margin-bottom: 40px;
+            opacity: 0;
+        }
+
+        .cta-button {
+            padding: 14px 32px;
+            background: #4A90E2;
+            border: none;
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .cta-button:hover {
+            background: #357ABD;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .section-container {
+            width: 100%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-label {
+            font-size: 13px;
+            color: #4A90E2;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            opacity: 0;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #222;
+            letter-spacing: -0.5px;
+            opacity: 0;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .skill-card {
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 8px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .skill-card h3 {
+            color: #222;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .skill-card ul {
+            list-style: none;
+        }
+
+        .skill-card li {
+            padding: 10px 0;
+            color: #666;
+            font-size: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .skill-card li:last-child {
+            border-bottom: none;
+        }
+
+        .experience-timeline {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .experience-item {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid #4A90E2;
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .experience-item h3 {
+            color: #222;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .experience-item .company {
+            color: #4A90E2;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .experience-item .duration {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .experience-item ul {
+            list-style: none;
+        }
+
+        .experience-item li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #666;
+            font-size: 15px;
+        }
+
+        .experience-item li:before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: #4A90E2;
+            font-size: 20px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 8px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px) scale(1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .project-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #E8F4FF;
+            color: #4A90E2;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .project-badge.company {
+            background: #FFF4E6;
+            color: #E67E22;
+        }
+
+        .project-card h3 {
+            color: #222;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .project-card .role {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .project-card .tech-stack {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .project-card p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .contact-container {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-text {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+
+        .contact-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .contact-link {
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 15px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .contact-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            color: #4A90E2;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 14px;
+            background: #fafafa;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            nav {
+                padding: 15px 0;
+            }
+
+            .nav-container {
+                padding: 0 20px;
+            }
+
+            section {
+                padding: 80px 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+                font-size: 14px;
+            }
+
+            .skills-grid,
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-links {
+                grid-template-columns: 1fr;
+            }
+
+            .project-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-
-    <!-- Navbar -->
+    <div id="canvas-container"></div>
+    
     <nav>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+        <div class="nav-container">
+            <div class="logo">Anandshiv Maurya</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#skills">Skills</a>
+                <a href="#experience">Experience</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
     </nav>
 
-    <!-- Home Section -->
-    <section id="home">
-        <img src="profile picture.jpg" alt="Profile Picture" class="profile-image" >
-        <div class="intro">
-            <h1>Hello, I'm Anandshiv Maurya</h1>
-            <p>Aspiring Data Analyst with a passion for data visualization and analysis.</p>
-            <a href="#projects" class="button">View My Projects</a>
-        </div>
-    </section>
+    <div class="content">
+        <section class="hero" id="home">
+            <div class="hero-label">Software Engineer</div>
+            <h1 id="hero-name"></h1>
+            <p id="hero-description"></p>
+            <button class="cta-button" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Get In Touch</button>
+        </section>
 
-    <!-- About Section -->
-    <section id="about">
-        <h2>About Me</h2>
-        <p>With a passion for leveraging technology to drive innovation and solve real-world problems, 
-            I am currently pursuing a Bachelor of Science in Computer Science. My solid foundation in programming languages, 
-            coupled with a keen interest in various aspects of development and technology, equips me with the skills to thrive 
-            in the ever-evolving tech industry.</p>
-    </section>
+        <section id="skills">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-label">What I Do</div>
+                    <h2 class="section-title">Technical Skills</h2>
+                </div>
+                <div class="skills-grid" id="skills-container"></div>
+            </div>
+        </section>
 
-    <!-- Skills Section -->
-    <section id="skills">
-        <h2>Skills</h2>
+        <section id="experience">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-label">Career Journey</div>
+                    <h2 class="section-title">Professional Experience</h2>
+                </div>
+                <div class="experience-timeline" id="experience-container"></div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-label">Portfolio</div>
+                    <h2 class="section-title">Featured Projects</h2>
+                </div>
+                <div class="projects-grid" id="projects-container"></div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="section-container">
+                <div class="contact-container">
+                    <div class="section-header">
+                        <div class="section-label">Let's Connect</div>
+                        <h2 class="section-title">Get In Touch</h2>
+                    </div>
+                    <p class="contact-text">I'm currently looking for new opportunities and exciting projects. Whether you have a question or just want to connect, feel free to reach out!</p>
+                    <div class="contact-links" id="contact-container"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2026 Anandshiv Maurya. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // ==================== DATA CONFIGURATION ====================
+        // Update this section to modify portfolio content
         
-        <div class="skill-bar">
-            <p>Communication Skills</p>
-            <div class="progress"><div class="CommunicationSkills"></div></div>
-        </div>
+        const portfolioData = {
+            hero: {
+                name: "Anandshiv Maurya",
+                description: "Full Stack Developer specializing in Angular, Java, and Spring Boot. Passionate about building scalable SaaS applications with seamless payment integrations and exceptional user experiences."
+            },
+            
+            skills: [
+                {
+                    category: "Frontend Development",
+                    items: ["Angular & Angular CLI", "TypeScript & JavaScript", "Three.js & GSAP", "HTML5 & CSS3", "Responsive Design"]
+                },
+                {
+                    category: "Backend Development",
+                    items: ["Java & Spring Boot", "REST APIs", "Hibernate & JPA", "Servlets & JSP", "Python Flask"]
+                },
+                {
+                    category: "Database & Tools",
+                    items: ["MySQL", "JDBC", "Git & Version Control", "Maven", "Database Design"]
+                },
+                {
+                    category: "Specializations",
+                    items: ["Payment Integration (Razorpay)", "SaaS Development", "Network Security", "Ethical Hacking", "Web Security"]
+                }
+            ],
+            
+            experience: [
+                {
+                    title: "Angular Developer",
+                    company: "V2STech Solutions Pvt Ltd",
+                    duration: "July 2025 - January 2026",
+                    responsibilities: [
+                        "Independently developed complete frontend for AxionPro, a production SaaS platform",
+                        "Integrated Razorpay payment gateway with comprehensive webhook handling",
+                        "Built interactive UI components using Angular, Three.js, and GSAP",
+                        "Optimized application performance and implemented Angular best practices",
+                        "Collaborated with backend team for seamless API integration"
+                    ]
+                },
+                {
+                    title: "Java Full Stack Developer",
+                    company: "QSpiders - Software Testing Training Institute",
+                    duration: "July 2024 - August 2025",
+                    responsibilities: [
+                        "Developed full-stack applications using Java, Spring Boot, and MySQL",
+                        "Built RESTful APIs with secure authentication mechanisms",
+                        "Designed and optimized database schemas for performance",
+                        "Worked extensively with Servlets, JSP, Hibernate, and JDBC",
+                        "Delivered multiple projects demonstrating end-to-end development skills"
+                    ]
+                },
+                {
+                    title: "Cybersecurity & Ethical Hacking Intern",
+                    company: "Quantum Learnings | FutureSkills Prime",
+                    duration: "April 2024 - 2025",
+                    responsibilities: [
+                        "Completed intensive 8-week cybersecurity and ethical hacking program",
+                        "Developed password strength testing tool using Python Flask",
+                        "Learned penetration testing techniques and security protocols",
+                        "Applied security best practices to identify web application vulnerabilities",
+                        "Gained hands-on experience in network security and risk mitigation"
+                    ]
+                }
+            ],
+            
+            projects: [
+                {
+                    name: "AxionPro",
+                    type: "company",
+                    status: "LIVE",
+                    role: "Complete Frontend Development (Company SaaS Project)",
+                    tech: "Angular • TypeScript • Three.js • GSAP • Razorpay API",
+                    description: "Enterprise SaaS application streamlining the vehicle purchase process including RTO registration, insurance processing, and documentation management. Independently handled all frontend development including payment gateway integration, real-time updates, and responsive UI design. Currently serving real customers in production."
+                },
+                {
+                    name: "FoodFlick",
+                    type: "personal",
+                    status: null,
+                    role: "Personal Project",
+                    tech: "Java • Spring Boot • MySQL • REST API • Hibernate",
+                    description: "Comprehensive canteen management system featuring user authentication, dynamic menu management, real-time order processing, and payment integration. Built complete backend API and database architecture with optimized query performance."
+                },
+                {
+                    name: "Password Strength Tester",
+                    type: "personal",
+                    status: null,
+                    role: "Cybersecurity Project",
+                    tech: "Python • Flask • Security Analysis • RegEx",
+                    description: "Security analysis tool that evaluates password strength against common vulnerabilities including dictionary attacks, pattern recognition, and entropy analysis. Provides real-time feedback and improvement recommendations based on industry security standards."
+                }
+            ],
+            
+            contact: [
+                { label: "Email", url: "mailto:anandpcacs1@gmail.com" },
+                { label: "LinkedIn", url: "https://linkedin.com/in/anandshivmaurya-8ab4502b7" },
+                { label: "Phone", url: "tel:08879095673" },
+                { label: "Portfolio", url: "https://anandshiv5422.github.io/portfolio/" }
+            ]
+        };
+        
+        // ==================== RENDER FUNCTIONS ====================
+        
+        function renderHero() {
+            document.getElementById('hero-name').textContent = portfolioData.hero.name;
+            document.getElementById('hero-description').textContent = portfolioData.hero.description;
+        }
+        
+        function renderSkills() {
+            const container = document.getElementById('skills-container');
+            container.innerHTML = portfolioData.skills.map(skill => `
+                <div class="skill-card">
+                    <h3>${skill.category}</h3>
+                    <ul>
+                        ${skill.items.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+        
+        function renderExperience() {
+            const container = document.getElementById('experience-container');
+            container.innerHTML = portfolioData.experience.map(exp => `
+                <div class="experience-item">
+                    <h3>${exp.title}</h3>
+                    <div class="company">${exp.company}</div>
+                    <div class="duration">${exp.duration}</div>
+                    <ul>
+                        ${exp.responsibilities.map(resp => `<li>${resp}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+        
+        function renderProjects() {
+            const container = document.getElementById('projects-container');
+            container.innerHTML = portfolioData.projects.map(project => `
+                <div class="project-card">
+                    <div class="project-header">
+                        <div>
+                            ${project.status ? `<span class="project-badge ${project.type}">${project.status}</span>` : ''}
+                        </div>
+                    </div>
+                    <h3>${project.name}</h3>
+                    <div class="role">${project.role}</div>
+                    <div class="tech-stack">${project.tech}</div>
+                    <p>${project.description}</p>
+                </div>
+            `).join('');
+        }
+        
+        function renderContact() {
+            const container = document.getElementById('contact-container');
+            container.innerHTML = portfolioData.contact.map(contact => `
+                <a href="${contact.url}" class="contact-link" ${contact.url.startsWith('http') ? 'target="_blank"' : ''}>${contact.label}</a>
+            `).join('');
+        }
+        
+        // ==================== INITIALIZE ====================
+        
+        function initPortfolio() {
+            renderHero();
+            renderSkills();
+            renderExperience();
+            renderProjects();
+            renderContact();
+            initAnimations();
+        }
+        
+        // ==================== THREE.JS BACKGROUND ====================
+        
+        gsap.registerPlugin(ScrollTrigger);
 
-        <div class="skill-bar">
-            <p>Database Management</p>
-            <div class="progress"><div class="DatabaseManagement"></div></div>
-        </div>
-        <div class="skill-bar">
-            <p>Data analysis - EDA</p>
-            <div class="progress"><div class="Dataanalysis"></div></div>
-        </div>
-        <div class="skill-bar">
-            <p>Java Developer</p>
-            <div class="progress"><div class="JavaDeveloper"></div></div>
-        </div>
-        <div class="skill-bar">
-            <p>Power BI</p>
-            <div class="progress"><div class="PowerBI"></div></div>
-        </div>
-    </section>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-    <!-- Experience Section -->
-    <section id="experience">
-        <h2>Experience</h2>
-        <div class="timeline">
-            <div class="timeline-item">
-                <h3>Data Analyst Intern - The Sparks Foundation</h3>
-                <span>March 2024 - April 2024</span>
-                <p>Analyzed data using Power BI and Excel to provide insights and improve business processes.</p>
-            </div>
-            <div class="timeline-item">
-                <h3>Cyber Security Intern - The Futureskills Prime</h3>
-                <span>April 2024 - June 2024</span>
-                <p>Helped monitor and secure network, focusing on routing, switching, and identifying vulnerabilities.</p>
-            </div>
-        </div>
-    </section>
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 300;
+        const posArray = new Float32Array(particlesCount * 3);
 
-    <!-- Projects Section -->
-    <section id="projects">
-        <h2>Projects</h2>
-        <div class="projects-container">
-            <div class="project">
-                <h3>Student Result Portal</h3>
-                <p>Developed a result portal website using Servlet, JSP, and MySQL for data management.</p>
-            </div>
-            <div class="project">
-                <h3>Trains Schedule Management System</h3>
-                <p>Created a GUI for CRUD operations and managed data using PL/SQL.</p>
-            </div>
-            <div class="project">
-                <h3>Create SAMSUNG e-commerce website</h3>
-                <p>Create a website using HTML, CSS, and JavaScript, or with a backend in PHP.</p>
-            </div>
-            <div class="project">
-                <h3>EDA with Python</h3>
-                <p>Performed data modeling and analysis using Python libraries.</p>
-            </div>
-            <div class="project">
-                <h3>Data Analysis with Power BI</h3>
-                <p>Built dashboards to visualize company employee datasets.</p>
-            </div>
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 80;
+        }
 
-        </div>
-    </section>
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.08,
+            color: 0x4A90E2,
+            transparent: true,
+            opacity: 0.5
+        });
 
-    <!-- Contact Section -->
-    <section id="contact">
-        <h2>Contact</h2>
-        <p>If you'd like to connect, feel free to reach out.</p>
-        <p>Email: <a href="mailto:anandpcacs1@gmail.com">anandpcacs1@gmail.com</a></p>
-        <p>LinkedIn: <a href="https://in.linkedin.com/in/anandshiv-maurya-8ab4502b7" target="_blank">LinkedIn Profile</a></p>
-    </section>
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
 
-    <script src="script.js"></script>
+        camera.position.z = 30;
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            particlesMesh.rotation.y += 0.0005;
+            particlesMesh.rotation.x += 0.0002;
+            
+            particlesMesh.rotation.y += mouseX * 0.0003;
+            particlesMesh.rotation.x += mouseY * 0.0003;
+            
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // ==================== GSAP ANIMATIONS ====================
+        
+        function initAnimations() {
+            gsap.timeline()
+                .to('.hero-label', { opacity: 1, duration: 0.8, delay: 0.3 })
+                .to('.hero h1', { opacity: 1, duration: 0.8 }, '-=0.6')
+                .to('.hero p', { opacity: 1, duration: 0.8 }, '-=0.6')
+                .to('.cta-button', { opacity: 1, duration: 0.8 }, '-=0.6');
+
+            gsap.utils.toArray('.section-label').forEach(label => {
+                gsap.to(label, {
+                    opacity: 1,
+                    duration: 0.6,
+                    scrollTrigger: {
+                        trigger: label,
+                        start: 'top 85%',
+                    }
+                });
+            });
+
+            gsap.utils.toArray('.section-title').forEach(title => {
+                gsap.to(title, {
+                    opacity: 1,
+                    duration: 0.6,
+                    scrollTrigger: {
+                        trigger: title,
+                        start: 'top 85%',
+                    }
+                });
+            });
+
+            gsap.utils.toArray('.skill-card').forEach((card, i) => {
+                gsap.to(card, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    delay: i * 0.1,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 90%',
+                    }
+                });
+            });
+
+            gsap.utils.toArray('.experience-item').forEach((item, i) => {
+                gsap.to(item, {
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.6,
+                    delay: i * 0.15,
+                    scrollTrigger: {
+                        trigger: item,
+                        start: 'top 90%',
+                    }
+                });
+            });
+
+            gsap.utils.toArray('.project-card').forEach((card, i) => {
+                gsap.to(card, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.6,
+                    delay: i * 0.1,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 90%',
+                    }
+                });
+            });
+
+            gsap.utils.toArray('.contact-link').forEach((link, i) => {
+                gsap.to(link, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    delay: i * 0.1,
+                    scrollTrigger: {
+                        trigger: link,
+                        start: 'top 92%',
+                    }
+                });
+            });
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Initialize portfolio on load
+        document.addEventListener('DOMContentLoaded', initPortfolio);
+    </script>
 </body>
 </html>
